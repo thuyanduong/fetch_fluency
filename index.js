@@ -13,9 +13,9 @@ logPost(1)
 function logUsers(){
     fetch('https://jsonplaceholder.typicode.com/users')
     .then(res => res.json())
-    .then(json => json.map(user => {
-        console.log(`${user.name}`);
-    }))
+    .then(json => {
+        json.forEach(user => console.log(`${user.name}`))
+    })
 }
 logUsers()
 
@@ -24,25 +24,24 @@ function getBizUsers(){
     fetch('https://jsonplaceholder.typicode.com/users')
     .then(res => res.json())
     .then(json => {
-        const biz = json.filter((obj => obj.email.includes('.biz')))
-        console.log(biz)
+        console.log(json.filter((user => user.email.includes('.biz'))))
     })
 }
 getBizUsers()
 
 
 function longestPost () {
-    let longestPost = ''
+    let longest = ''
     fetch(`https://jsonplaceholder.typicode.com/posts/`)
     .then(res => res.json())
     .then(json => {
-      for(let i = 0; i < json.length; i++) {
-        if(json[i]["body"].length > longestPost.length) {
-          longestPost = json[i].body
-        }
-      }
+    //   for(let i = 0; i < json.length; i++) {
+    //     if(json[i]["body"].length > longest.length) {
+    //         longest = json[i].body
+    //     }
+    //   }
+        console.log(json.reduce((prev, curr) => {return prev.length < curr.body.length ? curr.body : prev}, ''))
     })
-    console.log(longestPost)
 }
 longestPost() 
 
@@ -51,8 +50,7 @@ function getCompletedTasks(){
     fetch('https://jsonplaceholder.typicode.com/todos')
     .then(res => res.json())
     .then(json => {
-        const tasks = json.filter((obj) => obj.completed === true)
-        console.log(tasks)
+        console.log(json.filter(task => task.completed))
     })
 }
 getCompletedTasks()
@@ -60,29 +58,27 @@ getCompletedTasks()
 
 function displayPhotos(){
     let photoUrl = [];
-    await fetch('https://jsonplaceholder.typicode.com/photos')
+    fetch('https://jsonplaceholder.typicode.com/photos')
     .then(res => res.json())
-    .then(data => {
+    .then(json => {
         for(let i = 1; i <= 9; i++){
-            photoUrl.push(data[i].thumbnailUrl)
+            photoUrl.push(json[i].thumbnailUrl)
         }
-    })
-    photoUrl.forEach(photo => {
-        let image = document.createElement('img')
-        let div = document.querySelector('#photos')
-        image.src = photo
-        div.appendChild(image)
+        photoUrl.forEach(photo => {
+            let image = document.createElement('img')
+            image.src = photo
+            document.body.appendChild(image)
+        })
     })
 }
 displayPhotos()
 
-9.
+
 function numOfLongPosts(){
     fetch('https://jsonplaceholder.typicode.com/posts')
     .then(res => res.json())
     .then(json => {
-        const long = json.filter((obj) => obj.body.length > 20)
-        console.log(long.length)
+        console.log(json.filter((post) => post.body.length > 20))
     })
 }
 numOfLongPosts()
@@ -91,9 +87,14 @@ numOfLongPosts()
 function getUserFromPost(title){
     fetch('https://jsonplaceholder.typicode.com/posts')
     .then(res => res.json())
-    .then(data => {
-        let user = data.find(el => el.title === title)
-        console.log(user.userId)
+    .then(posts => {
+        let post = posts.find(el => el.title === title)
+        const userId = post.userId
+        fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
+        .then(res => res.json())
+        .then(user => {
+            console.log(user.name)
+        })
     })
 }
-getUserFromPost('sunt aut facere repellat provident occaecati excepturi optio reprehenderit')
+getUserFromPost('qui est esse')
