@@ -78,7 +78,7 @@ function numOfLongPosts(){
     fetch('https://jsonplaceholder.typicode.com/posts')
     .then(res => res.json())
     .then(json => {
-        console.log(json.filter((post) => post.body.length > 20))
+        console.log(json.filter((post) => post.body.length > 20).length)
     })
 }
 numOfLongPosts()
